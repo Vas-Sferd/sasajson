@@ -20,8 +20,7 @@ __meta__ = {
 }
 
 [node name="ModulesPanel" type="Panel" parent="Split"]
-anchor_right = 0.15
-anchor_bottom = 1.0
+margin_bottom = 600.0
 __meta__ = {
 "_edit_lock_": true
 }
@@ -29,14 +28,15 @@ __meta__ = {
 [node name="Modules" type="Tree" parent="Split/ModulesPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+hide_root = true
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="DataPanel" type="Panel" parent="Split"]
-anchor_left = 0.15
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_left = 12.0
+margin_right = 1024.0
+margin_bottom = 600.0
 __meta__ = {
 "_edit_lock_": true
 }

@@ -8,6 +8,7 @@ export(Dictionary) var modules_localization_data := {}
 onready var split := ($Split as SplitContainer)
 onready var modules := ($Split/ModulesPanel/Modules as Tree)
 
+
 # Автоматический ресайз при изменении развмера контейнера или движинея раздилителя
 func _resize_split_container(offset: int = -1):
 	if split != null:
@@ -17,9 +18,10 @@ func _resize_split_container(offset: int = -1):
 		var width := float(split.rect_size.x)
 		split.split_offset = int(width * clamp(offset / width, split_min_anchor, split_max_anchor))
 
-func _read_json():
+# Открываем файл и считываем из него данные. А затем закрываем
+func _read_json_file():
 	var file := File.new()
-	var err := file.open("res:/locale.json", file.READ)
+	var err := file.open("locale.json", file.READ)
 	
 	if err != OK:
 		return
@@ -33,10 +35,19 @@ func _read_json():
 	var json_dict := (res_json.result as Dictionary)
 	if json_dict != null:
 		modules_localization_data = json_dict
-		print(json_dict)
 	
 	file.close()
-	file.free()
 
+func _display_modules_names():
+	var modules_root := modules.create_item()
+	
+	for name in modules_localization_data.keys():
+		var item := modules.create_item(modules_root)
+		item.set_text(0, name)
+		item.set_text_align(0, HALIGN_CENTER)
+
+# Инициализация. Порядок вызова функций важен!!!
 func _ready():
-	pass
+	_resize_split_container()
+	_read_json_file()
+	_display_modules_names()
