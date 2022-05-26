@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/Main.gd" type="Script" id=1]
+
+[node name="Main" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+split_max_anchor = 0.4
+
+[node name="Split" type="HSplitContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ModulesPanel" type="Panel" parent="Split"]
+anchor_right = 0.15
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Modules" type="Tree" parent="Split/ModulesPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="DataPanel" type="Panel" parent="Split"]
+anchor_left = 0.15
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="DataGrid" type="GridContainer" parent="Split/DataPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[connection signal="dragged" from="Split" to="." method="_resize_split_container"]
+[connection signal="resized" from="Split" to="." method="_resize_split_container"]
