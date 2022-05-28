@@ -2,14 +2,14 @@ extends Control
 
 export(float, 0, 1) var split_min_anchor := 0.15
 export(float, 0, 1) var split_max_anchor := 0.5
-export(Dictionary) var modules_localization_data := {}
 
+var modules_localization_data := {}
 
 onready var split := ($Split as SplitContainer)
 onready var modules := ($Split/ModulesPanel/Modules as Tree)
 onready var data_grid := ($Split/DataPanel/DataGrid as GridContainer)
 
-# Автоматический ресайз при изменении развмера контейнера или движинея раздилителя
+# Автоматический ресайз при изменении развмера контейнера или движиния раздилителя
 func _resize_split_container(offset: int = -1):
 	if split != null:
 		if offset == -1:

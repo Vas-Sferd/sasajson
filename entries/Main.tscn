@@ -27,10 +27,47 @@ __meta__ = {
 
 [node name="Modules" type="Tree" parent="Split/ModulesPanel"]
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.8
 hide_root = true
 __meta__ = {
 "_edit_lock_": true
+}
+
+[node name="Panel" type="Panel" parent="Split/ModulesPanel"]
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TopLangSelect" type="MenuButton" parent="Split/ModulesPanel/Panel"]
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+text = "lang 1"
+flat = false
+items = [ "Item 0", null, 0, false, false, 0, 0, null, "", false, "Item 1", null, 0, false, false, 1, 0, null, "", false, "Item 2", null, 0, false, false, 2, 0, null, "", false, "Item 3", null, 0, false, false, 3, 0, null, "", false, "Item 4", null, 0, false, false, 4, 0, null, "", false ]
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="BotLangSelect" type="MenuButton" parent="Split/ModulesPanel/Panel"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+focus_mode = 2
+text = "lang 2"
+flat = false
+items = [ "Item 0", null, 0, false, false, 0, 0, null, "", false, "Item 1", null, 0, false, false, 1, 0, null, "", false, "Item 2", null, 0, false, false, 2, 0, null, "", false, "Item 3", null, 0, false, false, 3, 0, null, "", false, "Item 4", null, 0, false, false, 4, 0, null, "", false ]
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
 }
 
 [node name="DataPanel" type="Panel" parent="Split"]
@@ -44,6 +81,7 @@ __meta__ = {
 [node name="DataGrid" type="GridContainer" parent="Split/DataPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+columns = 4
 __meta__ = {
 "_edit_lock_": true
 }
