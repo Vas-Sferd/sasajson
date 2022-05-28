@@ -7,7 +7,7 @@ export(Dictionary) var modules_localization_data := {}
 
 onready var split := ($Split as SplitContainer)
 onready var modules := ($Split/ModulesPanel/Modules as Tree)
-
+onready var data_grid := ($Split/DataPanel/DataGrid as GridContainer)
 
 # Автоматический ресайз при изменении развмера контейнера или движинея раздилителя
 func _resize_split_container(offset: int = -1):
@@ -38,6 +38,7 @@ func _read_json_file():
 	
 	file.close()
 
+# Вывод в левую понель названия модулей
 func _display_modules_names():
 	var modules_root := modules.create_item()
 	
@@ -46,8 +47,14 @@ func _display_modules_names():
 		item.set_text(0, name)
 		item.set_text_align(0, HALIGN_CENTER)
 
-# Инициализация. Порядок вызова функций важен!!!
+# Вывод данных на словарь
+func _display_cards_on_data_grid():
+	# Todo добавть детей (карточки) и проинициализировать их (также подключить сигналы к ним)
+	pass
+
+# Инициализация.
 func _ready():
+	# [Warning] Порядок вызова функций важен
 	_resize_split_container()
 	_read_json_file()
 	_display_modules_names()
