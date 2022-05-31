@@ -21,9 +21,11 @@ func _prepare_top(top_lang: String, top_text: String):
 func _prepare_bot(bot_lang: String, bot_text: String):
 	if bot_lang == "":
 		bot_language_label.visible = false
-		bot_text_edit.visible = false	
+		bot_text_edit.visible = false
 		return
 	
+	bot_language_label.visible = true
+	bot_text_edit.visible = true
 	bot_language_label.text = bot_lang
 	bot_text_edit.text = bot_text
 

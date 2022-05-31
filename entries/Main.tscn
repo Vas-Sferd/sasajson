@@ -75,10 +75,16 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="DataGrid" type="GridContainer" parent="Split/DataPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Split/DataPanel"]
+anchor_left = 0.2
 anchor_right = 1.0
 anchor_bottom = 1.0
-columns = 4
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Cards" type="VBoxContainer" parent="Split/DataPanel/ScrollContainer"]
+alignment = 1
 __meta__ = {
 "_edit_lock_": true
 }

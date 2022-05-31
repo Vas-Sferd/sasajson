@@ -12,10 +12,24 @@ var bot_lang: String = ""
 
 onready var split := ($Split as SplitContainer)
 onready var modules := ($Split/ModulesPanel/Modules as ItemList)
-onready var data_grid := ($Split/DataPanel/DataGrid as GridContainer)
+onready var data_grid := ($Split/DataPanel/ScrollContainer/Cards as VBoxContainer)
 onready var top_lang_select := ($Split/ModulesPanel/Buttons/TopLangSelect as MenuButton)
 onready var bot_lang_select := ($Split/ModulesPanel/Buttons/BotLangSelect as MenuButton)
 onready var card_class := (preload("res://scenes/Card.tscn") as PackedScene)
+
+func _on_cards_text_changed(key: String, lang: String, text: String):
+	modules_localization_data[selected_module_name][lang][key] = text
+
+func _require_cards(n: int):
+	if len(cards) > n:
+		for i in range(n, len(cards)):
+			data_grid.remove_child(cards[i])
+	elif len(cards) < n:
+		for i in range(len(cards), n):
+			var card = card_class.instance()
+			card.connect("changed_text", self, "_on_cards_text_changed") 
+			cards.append(card)
+			data_grid.add_child(card)
 
 # Автоматический ресайз при изменении развмера контейнера или движиния раздилителя
 func _resize_split_container(offset: int = -1):
@@ -48,13 +62,6 @@ func _read_json_file():
 	if len(modules_localization_data.keys()) == 0:
 		return
 	
-	selected_module_name = modules_localization_data.keys()[0]
-	
-	if len(modules_localization_data[selected_module_name]["supported"]) == 0:
-		return
-	
-	top_lang = modules_localization_data[selected_module_name]["supported"][0]
-	
 	file.close()
 
 # Вывод в левую понель названия модулей
@@ -66,17 +73,21 @@ func _display_modules_names():
 func _on_module_selected(index: int):
 	var keys = modules_localization_data.keys()
 	selected_module_name = keys[index]
+	top_lang = modules_localization_data[selected_module_name]["supported"][0]
+	bot_lang = ""
 	_display_cards_on_data_grid()
 
 # Фиксация выбора языка
 func _on_top_lang_selected(id: int):
 	top_lang = modules_localization_data[selected_module_name]["supported"][id]
+	if top_lang == bot_lang:
+		bot_lang = ""
+	_display_cards_on_data_grid()
 
 func _on_bot_lang_selected(id: int):
 	if top_lang != bot_lang:
 		bot_lang = modules_localization_data[selected_module_name]["supported"][id]
-	elif top_lang == null:
-		top_lang = modules_localization_data[selected_module_name]["supported"][id]
+		_display_cards_on_data_grid()
 
 # При нажатии верхней кнопки выбора языка
 func _on_top_lang_select_dialog_show():
@@ -84,25 +95,9 @@ func _on_top_lang_select_dialog_show():
 	if popup == null or selected_module_name == "":
 		return
 	
-	if typeof(modules_localization_data) != TYPE_DICTIONARY:
-		print(typeof(modules_localization_data[selected_module_name]))
-		return
-	
-	if typeof(modules_localization_data["lk"]) != TYPE_DICTIONARY:
-		print(typeof(modules_localization_data[selected_module_name]))
-		return
-	
 	popup.clear()
 	for lang in modules_localization_data[selected_module_name]["supported"]:
 		popup.add_item(lang)
-	
-	if popup.is_connected("id_pressed", self, "_on_top_lang_selected"):
-		return
-		
-	var e := popup.connect("id_pressed", self, "_on_top_lang_selected")
-	if e != OK:
-		print("Cant connect signal in _on_top_lang_select_dialog_show()")
-		print("Error code: " + str(e))
 
 func _on_bot_lang_select_dialog_show():
 	var popup := (bot_lang_select.get_popup() as PopupMenu)
@@ -112,14 +107,6 @@ func _on_bot_lang_select_dialog_show():
 	popup.clear()
 	for lang in modules_localization_data[selected_module_name]["supported"]:
 		popup.add_item(lang)
-	
-	if popup.is_connected("id_pressed", self, "_on_bot_lang_selected"):
-		return
-	
-	var e := popup.connect("id_pressed", self, "_on_bot_lang_selected")
-	if e != OK:
-		print("Cant connect signal in _on_bot_lang_select_dialog_show()")
-		print("Error code: " + str(e))
 
 # Вывод данных на словарь
 func _display_cards_on_data_grid():
@@ -127,9 +114,11 @@ func _display_cards_on_data_grid():
 	if strings_dict == null:
 		return
 	
+	_require_cards(len(strings_dict))
+	
+	var card_i := 0
 	for key in strings_dict.keys():
-		var card = card_class.instance()
-		data_grid.add_child(card)
+		var card = cards[card_i]; card_i += 1
 		var bot_text := ""
 		if bot_lang != "":
 			if modules_localization_data[selected_module_name][bot_lang].has(key):
@@ -139,10 +128,14 @@ func _display_cards_on_data_grid():
 
 # Инициализация.
 func _ready():
+	top_lang_select.get_popup().connect("id_pressed", self, "_on_top_lang_selected")
+	bot_lang_select.get_popup().connect("id_pressed", self, "_on_bot_lang_selected")
+	
 	# [Warning] Порядок вызова функций важен
 	_resize_split_container()
 	_read_json_file()
+	
+	if len(modules_localization_data) != 0:
+		_on_module_selected(0)
+	
 	_display_modules_names()
-
-
-
