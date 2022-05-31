@@ -21,8 +21,8 @@ func _on_cards_text_changed(key: String, lang: String, text: String):
 	modules_localization_data[selected_module_name][lang][key] = text
 
 func _require_cards(n: int):
-	if len(cards) > n:
-		for i in range(n, len(cards)):
+	if data_grid.get_child_count() > n:
+		for i in range(n, data_grid.get_child_count()):
 			data_grid.remove_child(cards[i])
 	elif len(cards) < n:
 		for i in range(len(cards), n):
@@ -30,6 +30,10 @@ func _require_cards(n: int):
 			card.connect("changed_text", self, "_on_cards_text_changed") 
 			cards.append(card)
 			data_grid.add_child(card)
+	elif data_grid.get_child_count() < n:
+		for i in range(data_grid.get_child_count(), n):
+			print("Hi " + str(data_grid.get_child_count()))
+			data_grid.add_child(cards[i])
 
 # Автоматический ресайз при изменении развмера контейнера или движиния раздилителя
 func _resize_split_container(offset: int = -1):
@@ -82,11 +86,13 @@ func _on_top_lang_selected(id: int):
 	top_lang = modules_localization_data[selected_module_name]["supported"][id]
 	if top_lang == bot_lang:
 		bot_lang = ""
+	_require_cards(len(modules_localization_data[selected_module_name][top_lang]))
 	_display_cards_on_data_grid()
 
 func _on_bot_lang_selected(id: int):
 	if top_lang != bot_lang:
 		bot_lang = modules_localization_data[selected_module_name]["supported"][id]
+		_require_cards(len(modules_localization_data[selected_module_name][bot_lang]))
 		_display_cards_on_data_grid()
 
 # При нажатии верхней кнопки выбора языка
@@ -139,3 +145,15 @@ func _ready():
 		_on_module_selected(0)
 	
 	_display_modules_names()
+
+
+func _on_save_button_pressed():
+	var content = JSON.print(modules_localization_data, "\t")
+	var file := File.new()
+	var err := file.open("locale.json", file.WRITE)
+	
+	if err != OK:
+		return
+	
+	file.store_string(content)
+	file.close()

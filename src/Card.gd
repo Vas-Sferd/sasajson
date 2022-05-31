@@ -33,3 +33,7 @@ func prepare(key: String, top_lang: String, top_text: String, bot_lang: String, 
 	key_label.text = key
 	_prepare_top(top_lang, top_text)
 	_prepare_bot(bot_lang, bot_text)
+
+
+func _on_delete_button_pressed():
+	print("sda")

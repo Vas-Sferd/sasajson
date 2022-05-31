@@ -6,6 +6,7 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 350, 360 )
+mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true,
@@ -19,9 +20,20 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = -5.0
 margin_bottom = -5.0
+mouse_filter = 1
 color = Color( 0.419608, 0.505882, 0.737255, 0.129412 )
 __meta__ = {
 "_edit_lock_": true
+}
+
+[node name="DeleteButton" type="Button" parent="ColorRect"]
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+text = "X"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
 }
 
 [node name="Items" type="Control" parent="."]
@@ -31,6 +43,7 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = -5.0
 margin_bottom = -5.0
+mouse_filter = 1
 __meta__ = {
 "_edit_lock_": true
 }
@@ -38,6 +51,8 @@ __meta__ = {
 [node name="Key" type="Label" parent="Items"]
 anchor_right = 1.0
 anchor_bottom = 0.2
+margin_right = -40.0
+mouse_filter = 1
 text = "Key of text"
 align = 1
 valign = 1
@@ -109,5 +124,6 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
+[connection signal="pressed" from="ColorRect/DeleteButton" to="." method="_on_delete_button_pressed"]
 [connection signal="text_changed" from="Items/Top/TextEdit" to="." method="_on_top_text_changed"]
 [connection signal="text_changed" from="Items/Bot/TextEdit" to="." method="_on_bot_text_changed"]
