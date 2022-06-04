@@ -168,6 +168,10 @@ anchor_left = 0.1
 anchor_top = 0.05
 anchor_right = 0.9
 anchor_bottom = 0.4
+margin_left = -12.48
+margin_top = 4.1
+margin_right = 12.48
+margin_bottom = 5.8
 __meta__ = {
 "_edit_lock_": true
 }
@@ -186,6 +190,10 @@ anchor_left = 0.1
 anchor_top = 0.05
 anchor_right = 0.9
 anchor_bottom = 0.4
+margin_left = -12.48
+margin_top = 4.1
+margin_right = 12.48
+margin_bottom = 5.8
 __meta__ = {
 "_edit_lock_": true
 }
