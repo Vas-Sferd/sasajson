@@ -26,16 +26,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="DeleteButton" type="Button" parent="ColorRect"]
-anchor_left = 1.0
-anchor_right = 1.0
-grow_horizontal = 0
-text = "X"
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": true
-}
-
 [node name="Items" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -124,6 +114,20 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[connection signal="pressed" from="ColorRect/DeleteButton" to="." method="_on_delete_button_pressed"]
+[node name="DeleteButton" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -29.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = 30.0
+grow_horizontal = 0
+text = "X"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
 [connection signal="text_changed" from="Items/Top/TextEdit" to="." method="_on_top_text_changed"]
 [connection signal="text_changed" from="Items/Bot/TextEdit" to="." method="_on_bot_text_changed"]
+[connection signal="pressed" from="DeleteButton" to="." method="_on_delete_button_pressed"]

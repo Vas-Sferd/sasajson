@@ -15,10 +15,18 @@ onready var modules := ($Split/ModulesPanel/Modules as ItemList)
 onready var data_grid := ($Split/DataPanel/ScrollContainer/Cards as VBoxContainer)
 onready var top_lang_select := ($Split/ModulesPanel/Buttons/TopLangSelect as MenuButton)
 onready var bot_lang_select := ($Split/ModulesPanel/Buttons/BotLangSelect as MenuButton)
+onready var add_key_dialog := ($AddKeyDialog as Popup)
+onready var key_line_editor := ($AddKeyDialog/NewKeyLineEditor as LineEdit)
+
 onready var card_class := (preload("res://scenes/Card.tscn") as PackedScene)
 
 func _on_cards_text_changed(key: String, lang: String, text: String):
 	modules_localization_data[selected_module_name][lang][key] = text
+
+func _on_card_delete_key(key: String):
+	for lang in modules_localization_data[selected_module_name]["supported"]:
+		modules_localization_data[selected_module_name][lang].erase(key)
+	_display_cards_on_data_grid()
 
 func _require_cards(n: int):
 	if data_grid.get_child_count() > n:
@@ -27,7 +35,8 @@ func _require_cards(n: int):
 	elif len(cards) < n:
 		for i in range(len(cards), n):
 			var card = card_class.instance()
-			card.connect("changed_text", self, "_on_cards_text_changed") 
+			card.connect("changed_text", self, "_on_cards_text_changed")
+			card.connect("delete_key", self, "_on_card_delete_key")
 			cards.append(card)
 			data_grid.add_child(card)
 	elif data_grid.get_child_count() < n:
@@ -146,7 +155,6 @@ func _ready():
 	
 	_display_modules_names()
 
-
 func _on_save_button_pressed():
 	var content = JSON.print(modules_localization_data, "\t")
 	var file := File.new()
@@ -157,3 +165,15 @@ func _on_save_button_pressed():
 	
 	file.store_string(content)
 	file.close()
+
+func _on_add_key_button_pressed():
+	add_key_dialog.popup()
+
+func _on_add_key_dialog_confirmed():
+	var text = key_line_editor.text.trim_prefix(" ").trim_suffix(" ")
+	if text == "":
+		return
+	for lang in modules_localization_data[selected_module_name]["supported"]:
+		modules_localization_data[selected_module_name][lang][text] = "" 
+	_display_cards_on_data_grid()
+	
