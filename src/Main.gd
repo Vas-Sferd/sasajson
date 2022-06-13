@@ -1,5 +1,7 @@
 extends Control
 
+export(String) var default_file_name: String = ""
+
 export(float, 0, 1) var split_min_anchor := 0.15
 export(float, 0, 1) var split_max_anchor := 0.5
 
@@ -37,6 +39,9 @@ onready var add_module_dialog := ($AddModuleDialog as Popup)
 onready var module_line_editor := ($AddModuleDialog/DialogControl/ModuleNameControl/ModuleNameLineEditor as LineEdit)
 onready var module_lang_line_editor := ($AddModuleDialog/DialogControl/LangControl/LangLineEditor as LineEdit)
 
+# File dialog
+onready var file_dialog := ($FileDialog as FileDialog)
+
 func _on_cards_text_changed(key: String, lang: String, text: String):
 	modules_localization_data[selected_module_name][lang][key] = text
 
@@ -70,9 +75,9 @@ func _resize_split_container(offset: int = -1):
 		split.split_offset = int(width * clamp(offset / width, split_min_anchor, split_max_anchor))
 
 # Открываем файл и считываем из него данные. А затем закрываем
-func _read_json_file():
+func _read_json_file(path):
 	var file := File.new()
-	var err := file.open("locale.json", file.READ)
+	var err := file.open(path, file.READ)
 	
 	if err != OK:
 		return
@@ -91,6 +96,17 @@ func _read_json_file():
 	modules_localization_data = json_dict
 	if len(modules_localization_data.keys()) == 0:
 		return
+
+func _save_json_file(path: String):
+	var content = JSON.print(modules_localization_data, "\t")
+	var file := File.new()
+	var err := file.open(path, file.WRITE)
+	
+	if err != OK:
+		return
+	
+	file.store_string(content)
+	file.close()
 
 # Вывод в левую понель названия модулей
 func _display_modules_names():
@@ -176,7 +192,7 @@ func _ready():
 	
 	# [Warning] Порядок вызова функций важен
 	_resize_split_container()
-	_read_json_file()
+	_read_json_file("locale.json")
 	
 	if len(modules_localization_data) != 0:
 		_on_module_selected(0)
@@ -184,15 +200,25 @@ func _ready():
 	_display_modules_names()
 
 func _on_save_button_pressed():
-	var content = JSON.print(modules_localization_data, "\t")
-	var file := File.new()
-	var err := file.open("locale.json", file.WRITE)
-	
-	if err != OK:
-		return
-	
-	file.store_string(content)
-	file.close()
+	file_dialog.window_title = "Save file"
+	file_dialog.mode = FileDialog.MODE_SAVE_FILE
+	file_dialog.popup()
+
+func _on_load_button_pressed():
+	file_dialog.window_title = "Load file"
+	file_dialog.mode = FileDialog.MODE_OPEN_FILE
+	file_dialog.popup()
+
+func _on_file_selected(path):
+	match file_dialog.mode:
+		FileDialog.MODE_SAVE_FILE:
+			_save_json_file(path)
+		FileDialog.MODE_OPEN_FILE:
+			_read_json_file(path)
+			_display_modules_names()
+			_display_cards_on_data_grid()
+		_:
+			pass
 
 func _on_add_key_button_pressed():
 	add_key_dialog.popup()
