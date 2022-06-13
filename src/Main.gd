@@ -190,6 +190,8 @@ func _ready():
 	top_lang_select.get_popup().connect("id_pressed", self, "_on_top_lang_selected")
 	bot_lang_select.get_popup().connect("id_pressed", self, "_on_bot_lang_selected")
 	
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	
 	# [Warning] Порядок вызова функций важен
 	_resize_split_container()
 	_read_json_file("locale.json")
