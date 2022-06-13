@@ -47,7 +47,6 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = -5.0
 margin_bottom = -5.0
-text = "lang 1"
 flat = false
 __meta__ = {
 "_edit_lock_": true,
@@ -63,7 +62,6 @@ margin_top = 5.0
 margin_right = -5.0
 margin_bottom = -5.0
 focus_mode = 2
-text = "lang 2"
 flat = false
 __meta__ = {
 "_edit_lock_": true,

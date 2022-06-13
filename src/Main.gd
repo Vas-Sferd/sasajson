@@ -78,6 +78,7 @@ func _read_json_file():
 		return
 	
 	var res_json := JSON.parse(file.get_as_text())
+	file.close()
 	
 	if res_json.error != OK:
 		return
@@ -90,8 +91,6 @@ func _read_json_file():
 	modules_localization_data = json_dict
 	if len(modules_localization_data.keys()) == 0:
 		return
-	
-	file.close()
 
 # Вывод в левую понель названия модулей
 func _display_modules_names():
@@ -103,23 +102,35 @@ func _display_modules_names():
 func _on_module_selected(index: int):
 	var keys = modules_localization_data.keys()
 	selected_module_name = keys[index]
-	top_lang = modules_localization_data[selected_module_name]["supported"][0]
+	set_top_lang(modules_localization_data[selected_module_name]["supported"][0])
 	bot_lang = ""
 	_display_cards_on_data_grid()
 
 # Фиксация выбора языка
-func _on_top_lang_selected(id: int):
-	top_lang = modules_localization_data[selected_module_name]["supported"][id]
+func set_top_lang(lang: String):
+	top_lang = lang
+	top_lang_select.text = top_lang
 	if top_lang == bot_lang:
 		bot_lang = ""
-	_require_cards(len(modules_localization_data[selected_module_name][top_lang]))
+		bot_lang_select.text = ""
+	_display_cards_on_data_grid()
+
+func _on_top_lang_selected(id: int):
+	var lang = modules_localization_data[selected_module_name]["supported"][id]
+	set_top_lang(lang)
+
+func set_bot_lang(lang: String):
+	if top_lang != lang:
+		bot_lang = lang
+		bot_lang_select.text = bot_lang
+	elif top_lang != bot_lang and bot_lang != "":
+		set_top_lang(bot_lang)
+		set_bot_lang(lang)
 	_display_cards_on_data_grid()
 
 func _on_bot_lang_selected(id: int):
-	if top_lang != bot_lang:
-		bot_lang = modules_localization_data[selected_module_name]["supported"][id]
-		_require_cards(len(modules_localization_data[selected_module_name][bot_lang]))
-		_display_cards_on_data_grid()
+	var lang = modules_localization_data[selected_module_name]["supported"][id]
+	set_bot_lang(lang)
 
 # При нажатии верхней кнопки выбора языка
 func _on_top_lang_select_dialog_show():
