@@ -217,6 +217,9 @@ func _on_file_selected(path):
 			_save_json_file(path)
 		FileDialog.MODE_OPEN_FILE:
 			_read_json_file(path)
+			if len(modules_localization_data) == 0:
+				return;
+			_on_module_selected(0)
 			_display_modules_names()
 			_display_cards_on_data_grid()
 		_:
